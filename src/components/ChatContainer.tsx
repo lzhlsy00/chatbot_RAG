@@ -15,13 +15,21 @@ interface ChatContainerProps {
 
 export default function ChatContainer({ messages, isLoading, onSendMessage, onRegenerate, onDelete }: ChatContainerProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const prevMessageCountRef = useRef(0);
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    // 只在新增消息时滚动到底部
+    if (messages.length > prevMessageCountRef.current) {
+      messagesEndRef.current?.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'end'
+      });
+    }
+    prevMessageCountRef.current = messages.length;
   }, [messages]);
 
   return (
-    <div className="flex flex-col h-screen bg-white">
+    <div className="flex flex-col h-full bg-white">
       {/* 消息区域 */}
       <div className="flex-1 overflow-y-auto">
         {messages.length === 0 ? (

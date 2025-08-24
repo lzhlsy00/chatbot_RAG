@@ -169,6 +169,21 @@ export default function ChatApp() {
     }
   };
 
+  const deleteChat = (chatId: string) => {
+    if (window.confirm('确定要删除这个会话吗？')) {
+      const updatedHistories = chatHistories.filter(h => h.id !== chatId);
+      setChatHistories(updatedHistories);
+      saveToLocalStorage(updatedHistories);
+      
+      // 如果删除的是当前会话，清空当前消息
+      if (chatId === currentChatId) {
+        setMessages([]);
+        setCurrentChatId(undefined);
+        setConversationId(Date.now().toString());
+      }
+    }
+  };
+
   const sendMessage = async (content: string) => {
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -255,14 +270,15 @@ export default function ChatApp() {
   };
 
   return (
-    <div className="flex h-screen bg-white">
+    <div className="flex h-screen bg-white overflow-hidden">
       <Sidebar
         chatHistories={chatHistories}
         currentChatId={currentChatId}
         onNewChat={startNewChat}
         onSelectChat={selectChat}
+        onDeleteChat={deleteChat}
       />
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col overflow-hidden">
         <ChatContainer
           messages={messages}
           isLoading={isLoading}

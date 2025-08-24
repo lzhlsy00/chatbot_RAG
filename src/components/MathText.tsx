@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, memo } from 'react';
 import katex from 'katex';
 import 'katex/dist/katex.min.css';
 
@@ -8,10 +8,16 @@ interface MathTextProps {
   children: string;
 }
 
-export default function MathText({ children }: MathTextProps) {
+const MathText = memo(function MathText({ children }: MathTextProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const prevChildrenRef = useRef<string>('');
 
   useEffect(() => {
+    // 如果内容没有变化，不重新渲染
+    if (prevChildrenRef.current === children) {
+      return;
+    }
+    prevChildrenRef.current = children;
     if (!containerRef.current) return;
 
     const container = containerRef.current;
@@ -155,7 +161,10 @@ export default function MathText({ children }: MathTextProps) {
   return (
     <div 
       ref={containerRef}
-      className="whitespace-pre-wrap text-gray-800 leading-relaxed text-[15px] font-normal"
+      className="whitespace-pre-wrap text-gray-800 leading-relaxed text-[15px] font-normal min-h-[1.5em]"
+      style={{ contain: 'layout' }}
     />
   );
-}
+});
+
+export default MathText;
