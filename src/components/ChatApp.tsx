@@ -196,21 +196,12 @@ export default function ChatApp() {
     setMessages(newMessages);
     setIsLoading(true);
 
+    // 创建新聊天ID（如果需要）
+    let chatIdToUse = currentChatId;
     if (!currentChatId) {
-      const newChatId = Date.now().toString();
-      const newChat: ChatHistory = {
-        id: newChatId,
-        title: generateChatTitle(content),
-        messages: [userMessage],
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      };
-      
-      const updatedHistories = [newChat, ...chatHistories];
-      setChatHistories(updatedHistories);
-      setCurrentChatId(newChatId);
-      setConversationId(newChatId);
-      saveToLocalStorage(updatedHistories);
+      chatIdToUse = Date.now().toString();
+      setCurrentChatId(chatIdToUse);
+      setConversationId(chatIdToUse);
     }
 
     try {
@@ -245,14 +236,32 @@ export default function ChatApp() {
       const finalMessages = [...newMessages, assistantMessage];
       setMessages(finalMessages);
 
-      if (currentChatId) {
-        const updatedHistories = chatHistories.map(h => 
-          h.id === currentChatId 
-            ? { ...h, messages: finalMessages, updatedAt: new Date() }
-            : h
-        );
-        setChatHistories(updatedHistories);
-        saveToLocalStorage(updatedHistories);
+      // 更新或创建聊天历史
+      if (chatIdToUse) {
+        const existingChatIndex = chatHistories.findIndex(h => h.id === chatIdToUse);
+        
+        if (existingChatIndex === -1) {
+          // 创建新的聊天记录
+          const newChat: ChatHistory = {
+            id: chatIdToUse,
+            title: generateChatTitle(content),
+            messages: finalMessages,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          };
+          const updatedHistories = [newChat, ...chatHistories];
+          setChatHistories(updatedHistories);
+          saveToLocalStorage(updatedHistories);
+        } else {
+          // 更新现有聊天记录
+          const updatedHistories = chatHistories.map(h => 
+            h.id === chatIdToUse 
+              ? { ...h, messages: finalMessages, updatedAt: new Date() }
+              : h
+          );
+          setChatHistories(updatedHistories);
+          saveToLocalStorage(updatedHistories);
+        }
       }
       
     } catch (error) {
