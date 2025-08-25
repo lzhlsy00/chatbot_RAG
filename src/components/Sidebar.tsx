@@ -89,11 +89,13 @@ export default function Sidebar({
       {/* 底部用户信息 */}
       <div className="p-4 border-t border-gray-200">
         <div className="flex items-center gap-3 text-sm text-gray-600">
-          <div className="w-8 h-8 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center text-white text-xs font-medium">
-            用
-          </div>
+          <img 
+            src="/avatar.png" 
+            alt="王大雷"
+            className="w-8 h-8 rounded-full object-cover"
+          />
           <div>
-            <p className="font-medium">用户</p>
+            <p className="font-medium">王大雷</p>
             <p className="text-xs text-gray-400">免费版本</p>
           </div>
         </div>

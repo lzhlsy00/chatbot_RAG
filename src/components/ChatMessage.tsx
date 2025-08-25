@@ -29,9 +29,11 @@ export default function ChatMessage({ message, onRegenerate, onDelete, generatio
         {/* 头像 */}
         <div className="flex-shrink-0">
           {isUser ? (
-            <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center text-white text-sm font-semibold shadow-lg">
-              用户
-            </div>
+            <img 
+              src="/avatar.png" 
+              alt="王大雷"
+              className="w-10 h-10 rounded-lg shadow-lg object-cover"
+            />
           ) : (
             <div className="w-10 h-10 bg-gray-300 rounded-lg flex items-center justify-center text-gray-600 text-sm font-semibold shadow-lg">
               AI
