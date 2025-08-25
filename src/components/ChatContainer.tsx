@@ -11,9 +11,10 @@ interface ChatContainerProps {
   onSendMessage: (content: string) => void;
   onRegenerate?: (messageId: string) => void;
   onDelete?: (messageId: string) => void;
+  onStopGeneration?: () => void;
 }
 
-export default function ChatContainer({ messages, isLoading, onSendMessage, onRegenerate, onDelete }: ChatContainerProps) {
+export default function ChatContainer({ messages, isLoading, onSendMessage, onRegenerate, onDelete, onStopGeneration }: ChatContainerProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const prevMessageCountRef = useRef(0);
 
@@ -74,13 +75,28 @@ export default function ChatContainer({ messages, isLoading, onSendMessage, onRe
                   <div className="w-10 h-10 bg-gray-300 rounded-lg flex items-center justify-center text-gray-600 text-sm font-semibold shadow-lg">
                     AI
                   </div>
-                  <div className="flex-1 flex items-center">
-                    <div className="flex space-x-2">
-                      <div className="w-2 h-2 bg-emerald-400 rounded-full animate-bounce"></div>
-                      <div className="w-2 h-2 bg-emerald-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-                      <div className="w-2 h-2 bg-emerald-400 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
+                  <div className="flex-1 flex items-center justify-between">
+                    <div className="flex items-center">
+                      <div className="flex space-x-2">
+                        <div className="w-2 h-2 bg-emerald-400 rounded-full animate-bounce"></div>
+                        <div className="w-2 h-2 bg-emerald-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                        <div className="w-2 h-2 bg-emerald-400 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
+                      </div>
+                      <span className="ml-3 text-gray-500 text-sm">AI正在思考...</span>
                     </div>
-                    <span className="ml-3 text-gray-500 text-sm">AI正在思考...</span>
+                    {onStopGeneration && (
+                      <button
+                        onClick={onStopGeneration}
+                        className="px-3 py-1.5 text-sm text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors border border-gray-200 hover:border-red-200 flex items-center gap-1"
+                        title="停止生成"
+                      >
+                        <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
+                          <rect x="6" y="4" width="4" height="16" />
+                          <rect x="14" y="4" width="4" height="16" />
+                        </svg>
+                        停止
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>

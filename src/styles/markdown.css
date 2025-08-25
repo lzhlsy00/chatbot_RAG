@@ -1,0 +1,286 @@
+/* Markdown 内容样式 */
+.markdown-content {
+  color: #1f2937;
+  line-height: 1.75;
+}
+
+/* 标题样式 */
+.markdown-content h1 {
+  font-size: 2em;
+  font-weight: 700;
+  margin: 1.5em 0 0.5em 0;
+  color: #111827;
+  border-bottom: 2px solid #e5e7eb;
+  padding-bottom: 0.3em;
+}
+
+.markdown-content h2 {
+  font-size: 1.5em;
+  font-weight: 600;
+  margin: 1.3em 0 0.5em 0;
+  color: #1f2937;
+}
+
+.markdown-content h3 {
+  font-size: 1.25em;
+  font-weight: 600;
+  margin: 1.2em 0 0.5em 0;
+  color: #374151;
+}
+
+.markdown-content h4,
+.markdown-content h5,
+.markdown-content h6 {
+  font-size: 1.1em;
+  font-weight: 600;
+  margin: 1em 0 0.5em 0;
+  color: #4b5563;
+}
+
+/* 段落 */
+.markdown-content p {
+  margin: 0.75em 0;
+}
+
+/* 列表 */
+.markdown-content ul,
+.markdown-content ol {
+  margin: 0.75em 0;
+  padding-left: 2em;
+}
+
+.markdown-content ul {
+  list-style-type: disc;
+}
+
+.markdown-content ol {
+  list-style-type: decimal;
+}
+
+.markdown-content li {
+  margin: 0.25em 0;
+}
+
+.markdown-content li > ul,
+.markdown-content li > ol {
+  margin: 0.25em 0 0 0;
+}
+
+/* 引用块 */
+.markdown-content blockquote {
+  border-left: 4px solid #e5e7eb;
+  padding-left: 1em;
+  margin: 1em 0;
+  color: #6b7280;
+  font-style: italic;
+  background-color: #f9fafb;
+  padding: 0.75em 1em;
+  border-radius: 0 0.375rem 0.375rem 0;
+}
+
+/* 代码 */
+.markdown-content code {
+  background-color: #f3f4f6;
+  color: #e11d48;
+  padding: 0.125em 0.375em;
+  border-radius: 0.25rem;
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-size: 0.875em;
+}
+
+.markdown-content pre {
+  background-color: #1e293b;
+  color: #e2e8f0;
+  padding: 1em;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+  margin: 1em 0;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+}
+
+.markdown-content pre code {
+  background-color: transparent;
+  color: inherit;
+  padding: 0;
+  font-size: 0.875em;
+  line-height: 1.5;
+}
+
+/* 表格 */
+.markdown-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1em 0;
+  overflow: hidden;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+}
+
+.markdown-content th {
+  background-color: #f3f4f6;
+  font-weight: 600;
+  text-align: left;
+  padding: 0.75em 1em;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.markdown-content td {
+  padding: 0.75em 1em;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.markdown-content tr:last-child td {
+  border-bottom: none;
+}
+
+.markdown-content tr:hover {
+  background-color: #f9fafb;
+}
+
+/* 链接 */
+.markdown-content a {
+  color: #2563eb;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: color 0.2s;
+}
+
+.markdown-content a:hover {
+  color: #1d4ed8;
+}
+
+/* 图片 */
+.markdown-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+  margin: 1em 0;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+/* 水平线 */
+.markdown-content hr {
+  border: none;
+  border-top: 2px solid #e5e7eb;
+  margin: 2em 0;
+}
+
+/* 强调 */
+.markdown-content strong {
+  font-weight: 600;
+  color: #111827;
+}
+
+.markdown-content em {
+  font-style: italic;
+}
+
+/* 删除线 */
+.markdown-content s,
+.markdown-content del {
+  text-decoration: line-through;
+  color: #6b7280;
+}
+
+/* 数学公式 */
+.markdown-content .katex {
+  font-size: 1.1em;
+}
+
+.markdown-content .block-math {
+  text-align: center;
+  margin: 1.5em 0;
+}
+
+.markdown-content .inline-math {
+  display: inline-block;
+  margin: 0 0.2em;
+}
+
+/* 任务列表 */
+.markdown-content input[type="checkbox"] {
+  margin-right: 0.5em;
+}
+
+/* 键盘按键 */
+.markdown-content kbd {
+  background-color: #f3f4f6;
+  border: 1px solid #d1d5db;
+  border-radius: 0.25rem;
+  padding: 0.125em 0.375em;
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-size: 0.875em;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+/* 上标和下标 */
+.markdown-content sup {
+  font-size: 0.75em;
+  vertical-align: super;
+}
+
+.markdown-content sub {
+  font-size: 0.75em;
+  vertical-align: sub;
+}
+
+/* 定义列表 */
+.markdown-content dl {
+  margin: 1em 0;
+}
+
+.markdown-content dt {
+  font-weight: 600;
+  margin-top: 0.5em;
+}
+
+.markdown-content dd {
+  margin-left: 2em;
+  margin-bottom: 0.5em;
+  color: #4b5563;
+}
+
+/* 引用链接样式 */
+.markdown-content .citation-link {
+  color: #2563eb;
+  text-decoration: none;
+  font-size: 0.9em;
+  margin: 0 2px;
+}
+
+.markdown-content .citation-link:hover {
+  text-decoration: underline;
+}
+
+/* 引用编号样式 */
+.markdown-content sup {
+  color: #2563eb;
+  font-size: 0.75em;
+  font-weight: 600;
+}
+
+/* 参考文献区域 */
+.markdown-content .references {
+  margin-top: 2em;
+  padding-top: 1em;
+  border-top: 1px solid #e5e7eb;
+  font-size: 0.9em;
+}
+
+.markdown-content .references p {
+  margin: 0.5em 0;
+  color: #4b5563;
+}
+
+/* 引用标记 [1], [2] 等 */
+.markdown-content a[href^="#ref-"],
+.markdown-content a[href*="citation"] {
+  color: #2563eb;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.markdown-content a[href^="#ref-"]:hover,
+.markdown-content a[href*="citation"]:hover {
+  text-decoration: underline;
+}

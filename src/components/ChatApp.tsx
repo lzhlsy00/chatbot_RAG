@@ -11,6 +11,7 @@ export default function ChatApp() {
   const [conversationId, setConversationId] = useState('');
   const [chatHistories, setChatHistories] = useState<ChatHistory[]>([]);
   const [currentChatId, setCurrentChatId] = useState<string>();
+  const [abortController, setAbortController] = useState<AbortController | null>(null);
 
   useEffect(() => {
     const savedHistories = localStorage.getItem('chatHistories');
@@ -39,6 +40,13 @@ export default function ChatApp() {
   };
 
   const startNewChat = () => {
+    // 清理当前会话的异步状态
+    if (abortController) {
+      abortController.abort();
+      setAbortController(null);
+    }
+    setIsLoading(false);
+    
     if (messages.length > 0 && currentChatId) {
       const existingChatIndex = chatHistories.findIndex(h => h.id === currentChatId);
       if (existingChatIndex !== -1) {
@@ -59,6 +67,13 @@ export default function ChatApp() {
   };
 
   const selectChat = (chatId: string) => {
+    // 清理当前会话的异步状态
+    if (abortController) {
+      abortController.abort();
+      setAbortController(null);
+    }
+    setIsLoading(false);
+    
     const chat = chatHistories.find(h => h.id === chatId);
     if (chat) {
       setMessages(chat.messages);
@@ -95,6 +110,10 @@ export default function ChatApp() {
     setMessages(updatedMessages);
     setIsLoading(true);
 
+    // 创建新的 AbortController
+    const controller = new AbortController();
+    setAbortController(controller);
+
     try {
       // 重新发送请求
       const apiEndpoint = '/api/chat/stream';
@@ -109,6 +128,7 @@ export default function ChatApp() {
           conversationId,
           chatHistory: historyBeforeRegeneration.slice(0, userMessageIndex), // 只包含用户消息之前的历史
         }),
+        signal: controller.signal,
       });
 
       const data = await response.json();
@@ -139,16 +159,22 @@ export default function ChatApp() {
       }
       
     } catch (error) {
-      console.error('Error regenerating message:', error);
-      const errorMessage: Message = {
-        id: Date.now().toString(),
-        content: '抱歉，重新生成消息时出现错误，请稍后重试。',
-        role: 'assistant',
-        timestamp: new Date(),
-      };
-      setMessages(prev => [...prev, errorMessage]);
+      if (error instanceof Error && error.name === 'AbortError') {
+        // 请求被用户取消，不显示错误消息
+        console.log('Regenerate request was aborted by user');
+      } else {
+        console.error('Error regenerating message:', error);
+        const errorMessage: Message = {
+          id: Date.now().toString(),
+          content: '抱歉，重新生成消息时出现错误，请稍后重试。',
+          role: 'assistant',
+          timestamp: new Date(),
+        };
+        setMessages(prev => [...prev, errorMessage]);
+      }
     } finally {
       setIsLoading(false);
+      setAbortController(null);
     }
   };
 
@@ -175,12 +201,27 @@ export default function ChatApp() {
       setChatHistories(updatedHistories);
       saveToLocalStorage(updatedHistories);
       
-      // 如果删除的是当前会话，清空当前消息
+      // 如果删除的是当前会话，清空当前消息和状态
       if (chatId === currentChatId) {
+        // 清理异步状态
+        if (abortController) {
+          abortController.abort();
+          setAbortController(null);
+        }
+        setIsLoading(false);
+        
         setMessages([]);
         setCurrentChatId(undefined);
         setConversationId(Date.now().toString());
       }
+    }
+  };
+
+  const stopGeneration = () => {
+    if (abortController) {
+      abortController.abort();
+      setAbortController(null);
+      setIsLoading(false);
     }
   };
 
@@ -195,6 +236,10 @@ export default function ChatApp() {
     const newMessages = [...messages, userMessage];
     setMessages(newMessages);
     setIsLoading(true);
+
+    // 创建新的 AbortController
+    const controller = new AbortController();
+    setAbortController(controller);
 
     // 创建新聊天ID（如果需要）
     let chatIdToUse = currentChatId;
@@ -218,6 +263,7 @@ export default function ChatApp() {
           conversationId,
           chatHistory: messages,
         }),
+        signal: controller.signal,
       });
 
       const data = await response.json();
@@ -265,16 +311,22 @@ export default function ChatApp() {
       }
       
     } catch (error) {
-      console.error('Error sending message:', error);
-      const errorMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        content: '抱歉，发送消息时出现错误，请稍后重试。',
-        role: 'assistant',
-        timestamp: new Date(),
-      };
-      setMessages(prev => [...prev, errorMessage]);
+      if (error instanceof Error && error.name === 'AbortError') {
+        // 请求被用户取消，不显示错误消息
+        console.log('Request was aborted by user');
+      } else {
+        console.error('Error sending message:', error);
+        const errorMessage: Message = {
+          id: (Date.now() + 1).toString(),
+          content: '抱歉，发送消息时出现错误，请稍后重试。',
+          role: 'assistant',
+          timestamp: new Date(),
+        };
+        setMessages(prev => [...prev, errorMessage]);
+      }
     } finally {
       setIsLoading(false);
+      setAbortController(null);
     }
   };
 
@@ -294,6 +346,7 @@ export default function ChatApp() {
           onSendMessage={sendMessage}
           onRegenerate={handleRegenerate}
           onDelete={handleDelete}
+          onStopGeneration={stopGeneration}
         />
       </div>
     </div>

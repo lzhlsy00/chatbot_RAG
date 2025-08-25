@@ -1,3 +1,6 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* 导入 Markdown 样式 */
+@import '../styles/markdown.css';
