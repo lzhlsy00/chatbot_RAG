@@ -43,6 +43,12 @@ export default function ChatMessage({ message, onRegenerate, onDelete, generatio
         
         {/* 消息内容 */}
         <div className="flex-1 min-w-0">
+          {/* 用户名显示（仅用户消息） */}
+          {isUser && (
+            <div className="mb-1 text-xs font-medium text-gray-700">
+              王大雷
+            </div>
+          )}
           <div className="bg-gray-100 rounded-2xl px-4 py-3 inline-block max-w-full">
             <MathText>{message.content}</MathText>
           </div>
