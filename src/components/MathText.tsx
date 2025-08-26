@@ -42,8 +42,8 @@ const MathText = memo(function MathText({ children }: MathTextProps) {
       const mathPlaceholders: { [key: string]: string } = {};
       let mathIndex = 0;
       
-      // 先替换所有数学公式为占位符
-      let textWithPlaceholders = children;
+      // 先替换所有数学公式为占位符，同时清理首尾空白
+      let textWithPlaceholders = children.trim();
       
       // 块级公式 $$...$$
       textWithPlaceholders = textWithPlaceholders.replace(/\$\$([\s\S]*?)\$\$/g, (match, formula) => {
@@ -75,8 +75,9 @@ const MathText = memo(function MathText({ children }: MathTextProps) {
       
       // 配置 marked 渲染器，为链接添加安全属性
       const renderer = new marked.Renderer();
-      renderer.link = (href, title, text) => {
+      renderer.link = ({ href, title, tokens }) => {
         const titleAttr = title ? ` title="${title}"` : '';
+        const text = renderer.parser.parseInline(tokens);
         return `<a href="${href}"${titleAttr} target="_blank" rel="noopener noreferrer">${text}</a>`;
       };
       
@@ -231,13 +232,12 @@ const MathText = memo(function MathText({ children }: MathTextProps) {
         ALLOWED_ATTR: [
           'href', 'title', 'target', 'rel', 'class', 'id',
           'src', 'alt', 'width', 'height', 'style'
-        ],
-        ALLOWED_CLASSES: {
-          '*': ['katex', 'katex-*', 'block-math', 'inline-math', 'language-*']
-        }
+        ]
       });
 
-      container.innerHTML = cleanHTML;
+      // 清理HTML中的多余空白并设置内容
+      const finalHTML = cleanHTML.replace(/^\s+|\s+$/g, '').replace(/\s*<\/p>\s*$/g, '</p>');
+      container.innerHTML = finalHTML;
       
       // 应用代码高亮
       container.querySelectorAll('pre code').forEach((block) => {
@@ -263,7 +263,7 @@ const MathText = memo(function MathText({ children }: MathTextProps) {
   return (
     <div 
       ref={containerRef}
-      className="markdown-content whitespace-pre-wrap text-gray-800 leading-relaxed text-[15px] font-normal min-h-[1.5em]"
+      className="markdown-content text-gray-800 leading-relaxed text-[15px] font-normal"
       style={{ contain: 'layout' }}
     />
   );

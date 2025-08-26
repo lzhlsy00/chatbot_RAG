@@ -50,7 +50,7 @@ export default function ChatMessage({ message, onRegenerate, onDelete, generatio
             </div>
           )}
           <div className="bg-gray-100 rounded-2xl px-4 py-3 inline-block max-w-full">
-            <MathText>{message.content}</MathText>
+            <MathText>{message.content.trim()}</MathText>
           </div>
           
           {/* 操作按钮 */}
